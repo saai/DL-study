@@ -28,8 +28,8 @@ class SGD(object):
             # Weight update with momentum
             v_W = self.momentum * self.last_v_W + self.learning_rate * layer.grad_W
             v_b = self.momentum * self.last_v_b + self.learning_rate * layer.grad_b 
-            layer.W += - v_W 
-            layer.b += - v_b
+            layer.W += -v_W 
+            layer.b += -v_b
             self.last_v_W = v_W # 更新
             self.last_v_b = v_b # 更新
             # # Weight update without momentum

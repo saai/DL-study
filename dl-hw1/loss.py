@@ -57,11 +57,11 @@ class SoftmaxCrossEntropyLoss(object):
         y_M = np.zeros([K, N], dtype=int) # shape(K,N)
         for i in range(0, N):
             y_M[pred[i]][i] = 1 # 将第i个元素(列)的k类（行）设置为1
-        # 计算loss 每一列非0行的prob = log(exp（非0行值）/求和（exp(每一行)））
+        # 计算loss每一列非0行的prob = log(exp（每一列非0行值prob_M）/exp（每一列求和)）
         # 得到N个值，求平均，取负，就是loss
         loss = -1* np.mean(np.log(np.divide(nom_M, denom_M)))
         acc = 1.0 * np.sum(np.multiply(y_M, self.t_M))/N #判断对了类标的个数占总比例
-        print("loss:", loss, "acc:", acc)
+        # print("loss:", loss, "acc:", acc)
         return loss, acc
 
     def gradient_computing(self):
@@ -73,8 +73,8 @@ class SoftmaxCrossEntropyLoss(object):
         grad_W = np.zeros([self.num_output, self.num_input]) # shape(K, m)
         grad_b = np.zeros([self.num_output, 1]) # shape(K, 1)
         for n in range(self.N):
-            f_n = prob_diff_M[:,n].reshape(self.num_output,1)
-            t_n = self.Input[n].reshape(1, self.num_input)
+            f_n = prob_diff_M[:,n].reshape(self.num_output,1) # shape(K,1)
+            t_n = self.Input[n].reshape(1, self.num_input) #  shape(1,m)
             grad_W += np.dot(f_n, t_n)#  shape(K, 1) dot* shape(1,m) = shape(K, m)
             grad_b += prob_diff_M[:,n].reshape(self.num_output, 1) # shape (K, 1)
         grad_W = grad_W/self.N # shape(K, m)
